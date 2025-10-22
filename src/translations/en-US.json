@@ -1,0 +1,25 @@
+{
+  "welcome": "Welcome",
+  "error": {
+    "notFound": "Not found",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "internalServerError": "Internal server error",
+    "badRequest": "Bad request",
+    "conflict": "Conflict"
+  },
+  "user": {
+    "created": "User created successfully",
+    "updated": "User updated successfully",
+    "deleted": "User deleted successfully",
+    "notFound": "User not found",
+    "emailInUse": "Email already in use",
+    "invalidCredentials": "Invalid credentials"
+  },
+  "product": {
+    "created": "Product created successfully",
+    "updated": "Product updated successfully",
+    "deleted": "Product deleted successfully",
+    "notFound": "Product not found"
+  }
+}
