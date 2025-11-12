@@ -1,13 +1,12 @@
-import { Model } from "objection";
-
+import { Model } from '../../database/objection';
 
 export class User extends Model {
   id!: number;
   name!: string;
   email!: string;
   password!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
+  created_at!: Date;
+  updated_at!: Date;
 
   static get tableName() {
     return 'users';
@@ -27,11 +26,11 @@ export class User extends Model {
   }
 
   $beforeInsert() {
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this.created_at = new Date();
+    this.updated_at = new Date();
   }
 
   $beforeUpdate() {
-    this.updatedAt = new Date();
+    this.updated_at = new Date();
   }
 }

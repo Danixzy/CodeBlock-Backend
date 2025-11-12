@@ -1,5 +1,4 @@
-import { Model } from "objection";
-
+import { Model } from '../../database/objection';
 
 export class Product extends Model {
   id!: number;
@@ -7,8 +6,8 @@ export class Product extends Model {
   description?: string;
   price!: number;
   stock!: number;
-  createdAt!: Date;
-  updatedAt!: Date;
+  created_at!: Date;
+  updated_at!: Date;
 
   static get tableName() {
     return 'products';
@@ -29,11 +28,11 @@ export class Product extends Model {
   }
 
   $beforeInsert() {
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this.created_at = new Date();
+    this.updated_at = new Date();
   }
 
   $beforeUpdate() {
-    this.updatedAt = new Date();
+    this.updated_at = new Date();
   }
 }
