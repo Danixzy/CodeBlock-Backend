@@ -1,11 +1,13 @@
-import { Model } from "objection";
+import { Model, snakeCaseMappers } from 'objection';
 
+export type UserRole = 'admin' | 'client';
 
 export class User extends Model {
   id!: number;
   name!: string;
   email!: string;
   password!: string;
+  role!: UserRole;
   createdAt!: Date;
   updatedAt!: Date;
 
@@ -22,8 +24,13 @@ export class User extends Model {
         name: { type: 'string', minLength: 1, maxLength: 255 },
         email: { type: 'string', format: 'email' },
         password: { type: 'string', minLength: 6 },
+        role: { type: 'string', enum: ['admin', 'client'] },
       },
     };
+  }
+
+  static get columnNameMappers() {
+    return snakeCaseMappers();
   }
 
   $beforeInsert() {

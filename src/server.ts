@@ -1,6 +1,7 @@
 import app from './app';
 import { env } from './config/env';
 import { testConnection } from './database/knex';
+import './database/objection';
 import { logger } from './config/logger';
 
 const startServer = async (): Promise<void> => {
