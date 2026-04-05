@@ -1,12 +1,16 @@
 import type { Knex } from 'knex';
+import bcrypt from 'bcryptjs';
 
 export async function seed(knex: Knex): Promise<void> {
-  // Opcional: Seeds de usuários para desenvolvimento
-  // Remova ou comente em produção
-  
-  // Deletes ALL existing entries
   await knex('users').del();
 
-  // Você pode adicionar usuários manualmente aqui se necessário
-  // ou remover este arquivo completamente
+  const passwordHash = await bcrypt.hash('123456', 10);
+
+  await knex('users').insert([
+    {
+      name: 'Usuario Admin',
+      email: 'admin@example.com',
+      password: passwordHash,
+    },
+  ]);
 }

@@ -3,10 +3,12 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
 import { corsOptions } from './config/cors';
 import { morganLogger } from './config/logger';
 import { errorHandler } from './middlewares/errorHandler';
 import { env } from './config/env';
+import { swaggerSpec } from './config/swagger';
 import routes from './routes';
 
 const app: Application = express();
@@ -39,6 +41,9 @@ app.use('/api', limiter);
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // API routes
 app.use('/api', routes);
