@@ -1,11 +1,11 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { User } from './model';
+import { User, UserRole } from './model';
 import { env } from '../../config/env';
 import { ConflictError, UnauthorizedError, NotFoundError } from '../../errors';
 
 export class UserService {
-  async create(data: { name: string; email: string; password: string }) {
+  async create(data: { name: string; email: string; password: string; role?: UserRole }) {
     const existingUser = await User.query().findOne({ email: data.email });
 
     if (existingUser) {
@@ -17,6 +17,7 @@ export class UserService {
     const user = await User.query().insert({
       ...data,
       password: hashedPassword,
+      role: data.role || 'client', // Default to client
     });
 
     const { password, ...userWithoutPassword } = user;
