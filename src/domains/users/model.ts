@@ -1,4 +1,5 @@
 import { Model } from '../../database/objection';
+import { snakeCaseMappers } from 'objection';
 
 export class User extends Model {
   id!: number;
