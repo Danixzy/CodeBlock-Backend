@@ -2,7 +2,15 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User, UserRole } from './model';
 import { env } from '../../config/env';
-import { ConflictError, UnauthorizedError, NotFoundError } from '../../errors';
+import { ConflictError, UnauthorizedError, NotFoundError, BadRequestError } from '../../errors';
+
+type UpdateUserData = Partial<{
+  name: string;
+  email: string;
+  password: string;
+  currentPassword: string;
+  newPassword: string;
+}>;
 
 export class UserService {
   async create(data: { name: string; email: string; password: string; role?: UserRole }) {
@@ -67,7 +75,7 @@ export class UserService {
     return users.map(({ password, ...user }) => user);
   }
 
-  async update(id: number, data: Partial<{ name: string; email: string; password: string }>) {
+  async update(id: number, data: UpdateUserData) {
     const user = await User.query().findById(id);
 
     if (!user) {
@@ -81,11 +89,30 @@ export class UserService {
       }
     }
 
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10);
+    const updateData: Partial<{ name: string; email: string; password: string }> = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
+
+    if (data.newPassword) {
+      if (!data.currentPassword) {
+        throw new BadRequestError('Current password is required to set a new password');
+      }
+
+      const isCurrentPasswordValid = await bcrypt.compare(data.currentPassword, user.password);
+      if (!isCurrentPasswordValid) {
+        throw new UnauthorizedError('Current password is invalid');
+      }
+
+      updateData.password = data.newPassword;
     }
 
-    const updatedUser = await User.query().patchAndFetchById(id, data);
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(updateData.password, 10);
+    }
+
+    const updatedUser = await User.query().patchAndFetchById(id, updateData);
     const { password, ...userWithoutPassword } = updatedUser;
     return userWithoutPassword;
   }

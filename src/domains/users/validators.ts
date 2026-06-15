@@ -10,6 +10,8 @@ export const updateUserSchema = Joi.object({
   name: Joi.string().min(1).max(255),
   email: Joi.string().email(),
   password: Joi.string().min(6),
+  currentPassword: Joi.string().min(6),
+  newPassword: Joi.string().min(6),
 }).min(1);
 
 export const loginSchema = Joi.object({

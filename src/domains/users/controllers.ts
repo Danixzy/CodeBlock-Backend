@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from './service';
+import { AuthRequest } from '../../middlewares/auth';
+import { BadRequestError } from '../../errors';
 
 const userService = new UserService();
 
@@ -43,7 +45,16 @@ export class UserController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await userService.update(parseInt(req.params.id), req.body);
+      const request = req as AuthRequest;
+      const parsedId = Number.parseInt(req.params.id, 10);
+      const authUserId = Number(request.user?.id);
+      const targetUserId = Number.isNaN(parsedId) ? authUserId : parsedId;
+
+      if (!Number.isInteger(targetUserId) || targetUserId <= 0) {
+        throw new BadRequestError('Invalid user id');
+      }
+
+      const user = await userService.update(targetUserId, req.body);
       res.json({ status: 'success', data: user });
     } catch (error) {
       next(error);
