@@ -32,6 +32,9 @@ export const env = {
   },
 
   rateLimit: {
+    enabled: process.env.RATE_LIMIT_ENABLED
+      ? process.env.RATE_LIMIT_ENABLED === 'true'
+      : (process.env.NODE_ENV || 'development') === 'production',
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10),
     maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
   },

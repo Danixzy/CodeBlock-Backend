@@ -1,11 +1,20 @@
 import { Model } from '../../database/objection';
 import { snakeCaseMappers } from 'objection';
 
+export type UserRole = 'admin' | 'client';
+export type AccountType = 'freelancer' | 'contractor' | 'explorer';
+
 export class User extends Model {
   id!: number;
   name!: string;
   email!: string;
   password!: string;
+  role!: UserRole;
+  accountType!: AccountType;
+  bio?: string;
+  location?: string;
+  avatar_url?: string;
+  avatarUrl?: string;
   created_at!: Date;
   updated_at!: Date;
 
@@ -23,6 +32,10 @@ export class User extends Model {
         email: { type: 'string', format: 'email' },
         password: { type: 'string', minLength: 6 },
         role: { type: 'string', enum: ['admin', 'client'] },
+        accountType: { type: 'string', enum: ['freelancer', 'contractor', 'explorer'] },
+        bio: { type: ['string', 'null'] },
+        location: { type: ['string', 'null'], maxLength: 255 },
+        avatarUrl: { type: ['string', 'null'], maxLength: 500 },
       },
     };
   }
