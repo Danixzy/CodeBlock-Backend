@@ -69,4 +69,32 @@ export class UserController {
       next(error);
     }
   }
+
+  async getMe(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const user = await userService.getMe(Number(req.user?.id));
+      res.json({ status: 'success', data: user });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateMe(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const user = await userService.updateMe(Number(req.user?.id), req.body);
+      res.json({ status: 'success', data: user });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateMyAvatar(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      if (!req.file) throw new BadRequestError('No file provided');
+      const user = await userService.updateAvatar(Number(req.user?.id), req.file);
+      res.json({ status: 'success', data: user });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, RequestHandler } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import path from 'path';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
@@ -23,6 +24,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 // Compression
 app.use(compression() as unknown as RequestHandler);
 
@@ -35,7 +39,9 @@ const limiter = rateLimit({
   limit: env.rateLimit.maxRequests,
   message: 'Too many requests from this IP, please try again later.',
 });
-app.use('/api', limiter);
+if (env.rateLimit.enabled) {
+  app.use('/api', limiter);
+}
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
